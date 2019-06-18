@@ -1,0 +1,24 @@
+{
+  "name": "currency-converter",
+  "version": "1.0.0",
+  "description": "Simple implementation of currency converter using JS",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/trifonovt/currency-converter.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/trifonovt/currency-converter/issues"
+  },
+  "homepage": "https://github.com/trifonovt/currency-converter#readme",
+  "devDependencies": {
+    "webpack-cli": "^3.3.4"
+  }
+}
