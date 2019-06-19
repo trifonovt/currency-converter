@@ -1,5 +1,3 @@
 import style from './styles.css';
 
-// var cc = require('./currency-converter');
-
-
+var cc = require('./currency-converter');

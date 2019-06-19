@@ -86,6 +86,17 @@
 /************************************************************************/
 /******/ ({
 
+/***/ "./src/currency-converter.js":
+/*!***********************************!*\
+  !*** ./src/currency-converter.js ***!
+  \***********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+eval("var CurrencyCoverter = function () {\n  var calculatedAmount = document.getElementById('calculated-amount');\n  var submitButton = document.getElementById('submit');\n\n  function getFormData() {\n    var amount, from, to;\n    amount = document.getElementById('amount');\n    if (amount) amount = amount.value;\n    from = document.getElementById('from');\n    if (from) from = from.value;\n    to = document.getElementById('to');\n    if (to) to = to.value;\n    return {\n      amount: amount,\n      from: from,\n      to: to\n    };\n  }\n\n  function getCurrencyExchangeRates(event) {\n    event.preventDefault();\n    var fD = getFormData();\n    var xhr = new XMLHttpRequest();\n    var apiKey = 'latest?access_key=789b6637e9d33c71debd4b01b758a5e1';\n    var queryParams = \"&base=\".concat(fD.from, \"&symbols=EUR,JPY,GBP\");\n    var server = \"http://data.fixer.io/api/\".concat(apiKey + queryParams);\n    xhr.open('GET', server, true);\n    xhr.setRequestHeader(\"Content-Type\", \"application/x-www-form-urlencoded\");\n\n    xhr.onreadystatechange = function () {\n      if (this.readyState === XMLHttpRequest.DONE && this.status === 200) var response = JSON.parse(this.response);\n      if (response && response.success) showConversion(response);else if (response && response.error && response.error.type) alert(response.error.type);\n    };\n\n    xhr.send();\n  }\n\n  function showConversion(response) {\n    var fD = getFormData();\n    var calculatedConversion = 0;\n    if (fD.from == fD.to) calculatedConversion = fD.amount;else calculatedConversion = parseInt(fD.amount).toFixed(2) * response.rates[fD.to].toFixed(2);\n    calculatedAmount.innerHTML = \"\".concat(fD.amount, \" \").concat(fD.from, \" is \").concat(calculatedConversion, \" \").concat(fD.to);\n  }\n\n  submitButton.addEventListener('click', getCurrencyExchangeRates);\n}();\n\nmodule.exports.CurrencyCoverter;\n\n//# sourceURL=webpack:///./src/currency-converter.js?");
+
+/***/ }),
+
 /***/ "./src/index.js":
 /*!**********************!*\
   !*** ./src/index.js ***!
@@ -94,7 +105,7 @@
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _styles_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./styles.css */ \"./src/styles.css\");\n/* harmony import */ var _styles_css__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_styles_css__WEBPACK_IMPORTED_MODULE_0__);\n // var cc = require('./currency-converter');\n\n//# sourceURL=webpack:///./src/index.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _styles_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./styles.css */ \"./src/styles.css\");\n/* harmony import */ var _styles_css__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_styles_css__WEBPACK_IMPORTED_MODULE_0__);\n\n\nvar cc = __webpack_require__(/*! ./currency-converter */ \"./src/currency-converter.js\");\n\n//# sourceURL=webpack:///./src/index.js?");
 
 /***/ }),
 
@@ -103,9 +114,9 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _sty
   !*** ./src/styles.css ***!
   \************************/
 /*! no static exports found */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-eval("throw new Error(\"Module build failed (from ./node_modules/mini-css-extract-plugin/dist/loader.js):\\nModuleParseError: Module parse failed: Unexpected character '�' (1:0)\\nYou may need an appropriate loader to handle this file type, currently no loaders are configured to process this file. See https://webpack.js.org/concepts#loaders\\n(Source code omitted for this binary file)\\n    at handleParseError (C:\\\\Users\\\\ttrifon\\\\Desktop\\\\currency-converter\\\\currency-converter\\\\node_modules\\\\webpack\\\\lib\\\\NormalModule.js:450:19)\\n    at doBuild.err (C:\\\\Users\\\\ttrifon\\\\Desktop\\\\currency-converter\\\\currency-converter\\\\node_modules\\\\webpack\\\\lib\\\\NormalModule.js:484:5)\\n    at runLoaders (C:\\\\Users\\\\ttrifon\\\\Desktop\\\\currency-converter\\\\currency-converter\\\\node_modules\\\\webpack\\\\lib\\\\NormalModule.js:343:12)\\n    at C:\\\\Users\\\\ttrifon\\\\Desktop\\\\currency-converter\\\\currency-converter\\\\node_modules\\\\loader-runner\\\\lib\\\\LoaderRunner.js:373:3\\n    at iterateNormalLoaders (C:\\\\Users\\\\ttrifon\\\\Desktop\\\\currency-converter\\\\currency-converter\\\\node_modules\\\\loader-runner\\\\lib\\\\LoaderRunner.js:214:10)\\n    at Array.<anonymous> (C:\\\\Users\\\\ttrifon\\\\Desktop\\\\currency-converter\\\\currency-converter\\\\node_modules\\\\loader-runner\\\\lib\\\\LoaderRunner.js:205:4)\\n    at Storage.finished (C:\\\\Users\\\\ttrifon\\\\Desktop\\\\currency-converter\\\\currency-converter\\\\node_modules\\\\enhanced-resolve\\\\lib\\\\CachedInputFileSystem.js:43:16)\\n    at provider (C:\\\\Users\\\\ttrifon\\\\Desktop\\\\currency-converter\\\\currency-converter\\\\node_modules\\\\enhanced-resolve\\\\lib\\\\CachedInputFileSystem.js:79:9)\\n    at C:\\\\Users\\\\ttrifon\\\\Desktop\\\\currency-converter\\\\currency-converter\\\\node_modules\\\\graceful-fs\\\\graceful-fs.js:90:16\\n    at FSReqWrap.readFileAfterClose [as oncomplete] (internal/fs/read_file_context.js:53:3)\");\n\n//# sourceURL=webpack:///./src/styles.css?");
+eval("// extracted by mini-css-extract-plugin\n\n//# sourceURL=webpack:///./src/styles.css?");
 
 /***/ })
 
