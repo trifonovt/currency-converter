@@ -1,95 +1,116 @@
-
-
-// const currencies = {
-//   EUR: { SFR: 1.3135, USD: 1.2897, BPD: 0.8631 },
-//   USD: { JPY: 109.6200 },
-//   SFR: { USD: 0.9960 },
-//   BPD: { CAD: 1.7574 }
-// }
-// getSupportedSymbols()
-
-let calculatedAmount = document.getElementById('calculated-amount')
-
-function getFormData() {
-  var amount, from, to;
-  amount = document.getElementById('amount')
-  if (amount) amount = amount.value
-  
-  from = document.getElementById('from')
-  if (from) from = from.value
-  
-  to = document.getElementById('to')
-  if (to) to = to.value
-  return {amount, from, to}
+//  Predefined config object with currencies
+const hardcodedCurrencies = {
+    EUR: {
+        CHF: 1.3135,
+        USD: 1.2897,
+        GBP: 0.8631
+    },
+    USD: {
+        JPY: 109.6200,
+        CHF: 1.3135,
+        GBP: 0.8631,
+        EUR: 0.983
+    },
+    CHF: {
+        USD: 0.9960,
+        GBP: 0.8631,
+        EUR: 0.983,
+        JPY: 109.6200
+    },
+    GBP: {
+        CAD: 1.7574,
+        USD: 0.9960,
+        EUR: 0.983,
+        JPY: 109.6200,
+        CHF: 1.3135
+    }
 }
 
-// function getSupportedSymbols() {
-//   const xhr = new XMLHttpRequest();
-//   const apiKey = 'symbols?access_key=789b6637e9d33c71debd4b01b758a5e1'
-//   const server = `http://data.fixer.io/api/${apiKey}`
+var CurrencyConverter = function(hasCurrencies) {
+    var currencies = {};
+    var calculatedAmount = document.getElementById('calculated-amount');
 
-//   xhr.open('GET', server, true);
-//   xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded")
-//   xhr.onreadystatechange = function() {
-//       if (this.readyState === XMLHttpRequest.DONE && this.status === 200)
-//       var response = JSON.parse(this.response);
-//       if (response && response.success) 
-//         populateDropdowns(response);
-//       else if (response && response.error && response.error.type)
-//         alert(response.error.type)
-//   }
-//   xhr.send()
-// }
+    if (!currencies) {
+        currencies = hardcodedCurrencies;
+    } else {
+        currencies = hasCurrencies;
+    }
 
-// function populateDropdowns(response) {
-//   debugger
-//   fromSelect = document.getElementById('from')
-//   toSelect = document.getElementById('to')
-//   var i = 0;
+    function validateInput() {
+        let input = document.getElementById('amount')
+        if (!input.value) {
+            input.style.border = '2px solid red'
+            return false
+        } else {
+            input.style.border = '1px solid #ced4da'
+            return true
+        }
+    };
 
-//   for (currency in response.symbols) {
-//     //  var opt = document.createElement("option")
-//     //  opt.value = i
-//     //  opt.innerHTML = currency
-//     //  fromSelect.appendChild(opt);
-//     //  toSelect.appendChild(opt);
-//     //  i++
+    function getFormData() {
+        if (validateInput() === true) {
+            var amount, from, to;
+            amount = document.getElementById('amount')
+            if (amount) amount = parseInt(amount.value)
 
-//     fromSelect.options[fromSelect.options.length] = new Option(currency);
-//     toSelect.options[fromSelect.options.length] = new Option(currency);
-//   }
+            from = document.getElementById('from')
+            if (from) from = from.value
 
-// }
+            to = document.getElementById('to')
+            if (to) to = to.value
+            return {
+                amount,
+                from,
+                to
+            }
+        } else {
+            return false;
+        }
+    }
 
-function getCurrencyExchangeRates(event) {
-  event.preventDefault();
-  const fD = getFormData();
-  const xhr = new XMLHttpRequest();
-  const apiKey = 'latest?access_key=789b6637e9d33c71debd4b01b758a5e1'
-  const queryParams = `&base=${fD.from}&symbols=EUR,JPY,GBP`
-  const server = `http://data.fixer.io/api/${apiKey + queryParams}`
+    function getCurrencyExchangeRates(event) {
+        event.preventDefault();
+        if (getFormData() != false) {
+            const fD = getFormData();
+            const xhr = new XMLHttpRequest();
+            const apiKey = 'latest?access_key=789b6637e9d33c71debd4b01b758a5e1'
+            const queryParams = `&base=${fD.from}&symbols=EUR,JPY,GBP,CHF,USD`
+            const server = `http://data.fixer.io/api/${apiKey + queryParams}`
+            if (fD.from != 'EUR') {
+                showConversion(false)
+            } else {
+                xhr.open('GET', server, true);
+                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded")
+                xhr.onreadystatechange = function() {
+                    if (this.readyState === XMLHttpRequest.DONE && this.status === 200)
+                        var response = JSON.parse(this.response);
+                    if (response && response.success)
+                        this.showConversion(response)
+                    else if (response && response.error && response.error.type)
+                        console.log(response.error.type)
+                }
+                xhr.send()
+            }
+        }
+    }
 
-  xhr.open('GET', server, true);
-  xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded")
-  xhr.onreadystatechange = function() {
-      if (this.readyState === XMLHttpRequest.DONE && this.status === 200)
-      var response = JSON.parse(this.response);
-      if (response && response.success) 
-        showConversion(response);
-      else if (response && response.error && response.error.type)
-        alert(response.error.type)
-  }
-  xhr.send()
-}
+    function showConversion(response) {
+        const fD = getFormData();
+        let calculatedConversion = 0;
+        if (fD.from == fD.to) calculatedConversion = fD.amount
+        else
+        // Because the currency API is not working for more than EUR currency 
+        // predefined config object is used to obtain all the cases 
+        if (response === false)
+            calculatedConversion = fD.amount * currencies[fD.from][fD.to];
+        else
+            calculatedConversion = fD.amount * response.rates[fD.to];
+        calculatedAmount.innerHTML = `${fD.amount.toFixed(2)} ${fD.from} is ${calculatedConversion.toFixed(2)} ${fD.to}`
+    }
 
-function showConversion(response) {
-  debugger
-  const fD = getFormData();
+    return {
+        getCurrencyExchangeRates: getCurrencyExchangeRates
+    }
+}()
 
-  let calculatedConversion = 0;
-  if (fD.from == fD.to) calculatedConversion = fD.amount
-  else calculatedConversion = parseInt(fD.amount).toFixed(2) * response.rates[fD.to].toFixed(2);
-  calculatedAmount.innerHTML = `${fD.amount} ${fD.from} is ${calculatedConversion} ${fD.to}`
-}
-
-
+module.exports.CurrencyConverter = CurrencyConverter
